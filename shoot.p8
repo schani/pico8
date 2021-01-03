@@ -13,7 +13,7 @@ function _update()
  update_explosions()
  update_ship()
  update_enemies()
-	update_stars()
+ update_stars()
 end
 
 function _draw()
@@ -70,7 +70,7 @@ end
 --ship
 
 live = true
-ship = {x=10,y=64}
+ship = {x=10,y=64,cx=0,cw=8,cy=2,ch=3}
 acc = 0.5
 dacc = acc / 2
 sy = 0
@@ -176,6 +176,17 @@ function add_shot(x,y,sx,sy,s,f,fx)
   next_shot=10
  end
  local s={a=0,x=x,y=y,sx=sx,sy=sy,s=s,o=0,f=f}
+ if f then
+  s.cx=5
+  s.cw=3
+  s.cy=4
+  s.ch=1
+ else
+  s.cx=3
+  s.cw=2
+  s.cy=3
+  s.ch=2
+ end
  add(shots,s)
 	sfx(fx)
 end
@@ -214,7 +225,7 @@ espeed=2
 enemies={}
 
 function add_enemy(x,y,s)
- local e={x=x,y=y,s=s,o=0}
+ local e={x=x,y=y,cx=0,cw=8,cy=0,ch=8,s=s,o=0}
  add(enemies,e)
 end
 
@@ -270,14 +281,18 @@ end
 --collision
 
 function collide(a,b)
- x1=a.x
- y1=a.y
- x2=b.x
- y2=b.y
- if x1+8<x2 then return false end
- if x1>x2+8 then return false end
- if y1+8<y2 then return false end
- if y1>y2+8 then return false end
+ x1=a.x+a.cx
+ w1=a.cw
+ y1=a.y+a.cy
+ h1=a.ch
+ x2=b.x+b.cx
+ w2=b.cw
+ y2=b.y+b.cy
+ h2=b.ch
+ if x1+w1<x2 then return false end
+ if x1>x2+w2 then return false end
+ if y1+h1<y2 then return false end
+ if y1>y2+h2 then return false end
  return true
 end
 
